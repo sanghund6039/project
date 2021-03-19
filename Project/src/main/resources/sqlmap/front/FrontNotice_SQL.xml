@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.project.front.notice.service.impl.FrontNoticeMapper">
+
+	<resultMap id="clobMap" type="java.util.HashMap">
+		<result property="BOARD_CONTENT" column="BOARD_CONTENT" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+
+	<select id="selectNoticeListCnt" parameterType="java.util.HashMap" resultType="int">
+		SELECT  COUNT(*)
+		FROM  NOTICE_BOARD
+		WHERE 1=1
+		<if test='searchKeyword != null and searchKeyword != ""'>
+			<choose>
+		    	<when test='searchCondition == "subject"'>
+		   			AND	BOARD_TITLE LIKE '%' || #{searchKeyword} || '%'
+				</when>
+				<when test='searchCondition == "content"'>
+		   			AND	BOARD_CONTENT LIKE '%' || #{searchKeyword} || '%'
+				</when>
+			</choose>
+		</if>
+	</select>
+	
+	<select id="selectNoticeList" parameterType="java.util.HashMap" resultMap="clobMap">
+		SELECT * FROM ( 
+			SELECT 
+			    BOARD_ID,
+			    BOARD_TITLE,
+			    BOARD_CONTENT,
+			    BOARD_INSERT_TIME,
+			    BOARD_INSERT_USER,
+			    BOARD_UPDATE_TIME,
+			    BOARD_UPDATE_USER,
+			    OPEN_YN,
+			    TOP_YN,
+			    CLICK_CNT,
+			    RNUM,
+			    ROWNUM AS PNUM
+			FROM (
+				SELECT 
+					BOARD_ID,
+				    BOARD_TITLE,
+				    BOARD_CONTENT,
+				    BOARD_INSERT_TIME,
+				    BOARD_INSERT_USER,
+				    BOARD_UPDATE_TIME,
+				    BOARD_UPDATE_USER,
+				    OPEN_YN,
+				    TOP_YN,
+				    CLICK_CNT,
+				    '중요' AS RNUM
+				FROM (
+					SELECT  
+						BOARD_ID,
+					    BOARD_TITLE,
+					    BOARD_CONTENT,
+					    TO_CHAR(BOARD_INSERT_TIME, 'YYYY.MM.DD') AS BOARD_INSERT_TIME,
+					    BOARD_INSERT_USER,
+					    TO_CHAR(BOARD_UPDATE_TIME, 'YYYY.MM.DD') AS BOARD_UPDATE_TIME,
+					    BOARD_UPDATE_USER,
+					    OPEN_YN,
+					    TOP_YN,
+					    NVL(CLICK_CNT, 0) AS CLICK_CNT
+					FROM  NOTICE_BOARD
+					WHERE TOP_YN = 'Y'
+					<if test='searchKeyword != null and searchKeyword != ""'>
+						<choose>
+					    	<when test='searchCondition == "subject"'>
+					   			AND	BOARD_TITLE LIKE '%' || #{searchKeyword} || '%'
+							</when>
+							<when test='searchCondition == "content"'>
+					   			AND	BOARD_CONTENT LIKE '%' || #{searchKeyword} || '%'
+							</when>
+						</choose>
+					</if>
+					ORDER BY BOARD_ID DESC
+				)
+				
+				UNION ALL
+			
+				SELECT 
+	                BOARD_ID,
+	                BOARD_TITLE,
+	                BOARD_CONTENT,
+	                BOARD_INSERT_TIME,
+	                BOARD_INSERT_USER,
+	                BOARD_UPDATE_TIME,
+	                BOARD_UPDATE_USER,
+	                OPEN_YN,
+	                TOP_YN,
+	                CLICK_CNT,
+	                TO_CHAR(RNUM) AS RNUM
+	            FROM (
+	                SELECT 
+	                    BOARD_ID,
+	                    BOARD_TITLE,
+	                    BOARD_CONTENT,
+	                    BOARD_INSERT_TIME,
+	                    BOARD_INSERT_USER,
+	                    BOARD_UPDATE_TIME,
+	                    BOARD_UPDATE_USER,
+	                    OPEN_YN,
+	                    TOP_YN,
+	                    CLICK_CNT,
+	                    RNUM
+	                FROM (
+	                    SELECT  
+	                        BOARD_ID,
+	                        BOARD_TITLE,
+	                        BOARD_CONTENT,
+	                        TO_CHAR(BOARD_INSERT_TIME, 'YYYY.MM.DD') AS BOARD_INSERT_TIME,
+	                        BOARD_INSERT_USER,
+	                        TO_CHAR(BOARD_UPDATE_TIME, 'YYYY.MM.DD') AS BOARD_UPDATE_TIME,
+	                        BOARD_UPDATE_USER,
+	                        OPEN_YN,
+	                        TOP_YN,
+	                        NVL(CLICK_CNT, 0) AS CLICK_CNT,
+	                        ROWNUM AS RNUM
+	                    FROM  NOTICE_BOARD
+	                    WHERE NVL(TOP_YN, 'N') = 'N'
+	                    <if test='searchKeyword != null and searchKeyword != ""'>
+							<choose>
+						    	<when test='searchCondition == "subject"'>
+						   			AND	BOARD_TITLE LIKE '%' || #{searchKeyword} || '%'
+								</when>
+								<when test='searchCondition == "content"'>
+						   			AND	BOARD_CONTENT LIKE '%' || #{searchKeyword} || '%'
+								</when>
+							</choose>
+						</if>
+	                    ORDER BY BOARD_ID
+	                )
+	                ORDER BY RNUM DESC
+	            )
+			)
+		) WHERE PNUM BETWEEN (#{pageIndex} - 1) * #{pageSize} + 1 AND #{pageIndex} * #{pageSize} 
+	</select>
+	
+	<select id="selectNoticeOne" parameterType="java.util.HashMap" resultMap="clobMap">
+		SELECT
+		    BOARD_ID,
+		    BOARD_TITLE,
+		    BOARD_CONTENT,
+		    TO_CHAR(BOARD_INSERT_TIME, 'YYYY.MM.DD') AS BOARD_INSERT_TIME,
+		    BOARD_INSERT_USER,
+		    TO_CHAR(BOARD_UPDATE_TIME, 'YYYY.MM.DD') AS BOARD_UPDATE_TIME,
+		    BOARD_UPDATE_USER,
+		    OPEN_YN,
+		    TOP_YN,
+		    NVL(CLICK_CNT, 0) AS CLICK_CNT
+		FROM  NOTICE_BOARD
+		WHERE 1=1
+		  AND BOARD_ID = #{noticeId}
+	</select>
+	
+	<select id="selectFileList" parameterType="java.util.HashMap" resultMap="clobMap">
+		SELECT 
+			FILE_ID
+			, BOARD_ID
+			, FILE_NM
+			, FILE_URL
+			, FILE_FULL_URL
+			, FILE_INSERT_USER
+			, FILE_INSERT_TIME
+		FROM FILE_BOARD
+		WHERE BOARD_ID = #{noticeId}
+	</select>
+
+	<update id="updateNoticeCnt" parameterType="java.util.HashMap">
+		UPDATE NOTICE_BOARD
+		SET CLICK_CNT = (SELECT NVL(CLICK_CNT, 0) + 1 FROM NOTICE_BOARD WHERE BOARD_ID = #{noticeId})
+		WHERE BOARD_ID = #{noticeId}
+	</update>
+</mapper>
