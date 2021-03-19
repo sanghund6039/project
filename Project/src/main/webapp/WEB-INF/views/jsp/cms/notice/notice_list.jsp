@@ -4,6 +4,36 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<script type="text/javascript">
+	function fn_cancle(url){
+		if (confirm("한번 삭제한 자료는 복구할 방법이 없습니다.\n\n정말 삭제하시겠습니까?")) 
+	    { 
+	        var f = document.createElement('form');
+	        
+	        f.setAttribute('method', 'post');
+	        f.setAttribute('action', url);
+	        document.body.appendChild(f);
+	        f.submit();
+		}
+	}
+	
+	function Enter_Check(){
+	    // 엔터키의 코드는 13입니다.
+		if(event.keyCode == 13){
+			fn_submit();
+		}
+	}
+	
+	function fn_submit(){
+		$("#pageIndex").val("1");
+		$("#searchForm").submit();
+	}
+	
+	function fn_linkToPage(page){
+		$("#pageIndex").val(page);
+		$("#searchForm").submit();
+	}
+</script>
 
 <div class="row">
 	<div class="col-lg-12">
