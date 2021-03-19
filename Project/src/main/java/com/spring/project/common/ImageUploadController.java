@@ -32,18 +32,21 @@ public class ImageUploadController {
         
         //String uploadPath = "C:/Users/LeeSangHun/Documents/workspace-spring-tool-suite-4-4.9.0.RELEASE/Project/src/main/webapp/resources/images/";
 
-        String uploadPath = request.getSession().getServletContext().getRealPath("/") + "resources/upload/editor/";
+        String uploadPath = request.getSession().getServletContext().getRealPath("/"); // + "resources/upload/editor/";
         System.out.println("uploadPath == > "  + uploadPath);
         System.out.println("request.getContextPath() == ?> " + request.getContextPath());
+        
+        String changePath = uploadPath.substring(0,uploadPath.indexOf(".metadata")) + "project/Project/src/main/webapp/resources/upload/editor/";
+        System.out.println("changePath == > " + changePath);
         try {
-        	File saveFolder = new File(uploadPath);
+        	File saveFolder = new File(changePath);
         	
     		if (!saveFolder.exists() || saveFolder.isFile()) {
     			System.out.println("파일생성");
     		    saveFolder.mkdirs();
     		}
     		
-    		OutputStream out = new FileOutputStream(new File(uploadPath + fileName));
+    		OutputStream out = new FileOutputStream(new File(changePath + fileName));
             out.write(bytes);
         }catch(Exception e) {
         	System.out.println("err");

@@ -147,13 +147,15 @@ public class NoticeController {
 	    String uploadPath = request.getSession().getServletContext().getRealPath("/") + "resources/upload/notice/";
 	    System.out.println("uploadPath == > " + uploadPath);
 	    
+	    String changePath = uploadPath.substring(0,uploadPath.indexOf(".metadata")) + "project/Project/src/main/webapp/resources/upload/notice/";
+	    
 	    String atchFileId = "-1";
 	    List<MultipartFile> atchFile = multiRequest.getFiles(name);
 	    
 	    List<FileVO> atchFileList = null;
 	    try
 	    {
-	    	atchFileList = FileUtil.parseFileInf(atchFile, "", 0, atchFileId, uploadPath, "gif,jpg,jpeg,png,zip,hwp,docx,pdf,xls,xlsx", 20);
+	    	atchFileList = FileUtil.parseFileInf(atchFile, "", 0, atchFileId, changePath, "gif,jpg,jpeg,png,zip,hwp,docx,pdf,xls,xlsx", 20);
 	    }
 	    catch (Exception e)
 	    {
