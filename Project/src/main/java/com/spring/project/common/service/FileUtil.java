@@ -125,7 +125,7 @@ public class FileUtil {
 					 */
 					System.out.println("filesuccess");
 
-				}else if("zip,hwp,docx,pdf,xls,xlsx".indexOf(fileExt.toLowerCase()) > -1){
+				}else if("zip,hwp,docx,pdf,xls,xlsx,txt".indexOf(fileExt.toLowerCase()) > -1){
 					System.out.println("file img other");
 					String orifilePath = storePathString + file.getOriginalFilename();
 					file.transferTo(new File(orifilePath));

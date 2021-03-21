@@ -155,7 +155,7 @@ public class NoticeController {
 	    List<FileVO> atchFileList = null;
 	    try
 	    {
-	    	atchFileList = FileUtil.parseFileInf(atchFile, "", 0, atchFileId, changePath, "gif,jpg,jpeg,png,zip,hwp,docx,pdf,xls,xlsx", 20);
+	    	atchFileList = FileUtil.parseFileInf(atchFile, "", 0, atchFileId, changePath, "gif,jpg,jpeg,png,zip,hwp,docx,pdf,xls,xlsx,txt", 20);
 	    }
 	    catch (Exception e)
 	    {

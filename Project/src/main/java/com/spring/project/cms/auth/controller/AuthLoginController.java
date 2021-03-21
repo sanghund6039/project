@@ -44,4 +44,10 @@ public class AuthLoginController {
 		model.addAttribute("message", message);
 		return "/cms/auth/login_result";
 	}
+	
+	@RequestMapping(value="/logout.do", method=RequestMethod.GET)
+	public String loginOut(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request) throws Exception{
+		
+		return "/cms/auth/login";
+	}
 }

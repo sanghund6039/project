@@ -49,7 +49,7 @@
 	            
 		        <div class="profile">
 		            <div class="profile-info">
-                        <a href="#" class="profile-title"><c:out value="${LOGIN_INFO.name}"/> (<c:out value="${LOGIN_INFO.id}"/>)</a>
+                        <%-- <a href="#" class="profile-title"><c:out value="${LOGIN_INFO.name}"/> (<c:out value="${LOGIN_INFO.id}"/>)</a> --%>
                         <span class="profile-subtitle">Administrator</span>
                     </div>
 		        </div>

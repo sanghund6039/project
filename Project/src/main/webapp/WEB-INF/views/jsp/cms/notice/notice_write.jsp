@@ -106,7 +106,7 @@
 							<div class="col-sm-8">
 								<input type="file" name="imageFile" id="imageFile" class="form-control" />
 								<input type="hidden" name="imgUrl" value="">
-								<span class="tip MAT7">Tip</span> 파일유형은 gif,jpg,jpeg,png,zip,hwp,docx,pdf,xls,xlsx만 가능합니다.
+								<span class="tip MAT7">Tip</span> 파일유형은 gif,jpg,jpeg,png,zip,hwp,docx,pdf,xls,xlsx, txt만 가능합니다.
 								<br>
 								
 								<c:if test="${not empty filemap.resultList }">
