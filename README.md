@@ -21,4 +21,4 @@
   - 사용자 페이지 : /front/notice.do
 
 모든 설정을 마치고 실행
-메일 또는 src\main\webapp\resources\info\화면정의서_공지사항.pptx 로 화면정의서 공유
+메일로 화면정의서 공유
